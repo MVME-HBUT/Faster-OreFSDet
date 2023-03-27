@@ -1,0 +1,74 @@
+_BASE_: "Base-FSOD-C4.yaml"
+MODEL:
+  META_ARCHITECTURE: "CenterNet2Detector"
+  PROPOSAL_GENERATOR:
+    NAME: "CenterNet"  
+  WEIGHTS: "./output/fsod/R_50_C4_1x/CenterNet2_R50_1x.pth" #"./output/fsod/R_50_C4_1x/model_final.pth"  #CenterNet2_R50_1x.pth # model_final.pth #"detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: False
+  RESNETS:
+    DEPTH: 50
+    OUT_FEATURES:  ["res3", "res4", "res5"]
+  FPN:
+    IN_FEATURES: ["res3", "res4", "res5"]
+    
+  BACKBONE:
+    NAME: build_p35_resnet_fpn_backbone #"build_p67_resnet_fpn_backbone"
+    FREEZE_AT: 3
+  ROI_HEADS:
+    NAME: CustomCascadeROIHeads
+    IN_FEATURES: ["p3", "p4", "p5"] #["p3", "p4", "p5", "p6", "p7"]
+    IOU_THRESHOLDS: [0.6]
+    NMS_THRESH_TEST: 0.9 #  0.7 
+    # NMS_THRESH_TEST: 0.85 #0.85 #0.5
+  ROI_BOX_CASCADE_HEAD:
+    IOUS: [0.6] #[0.5, 0.6, 0.7] #[0.6, 0.7, 0.8]
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 1
+    POOLER_RESOLUTION: 4
+    CLS_AGNOSTIC_BBOX_REG: True
+    MULT_PROPOSAL_SCORE: True
+  CENTERNET:
+    REG_WEIGHT: 1.
+    NOT_NORM_REG: True
+    ONLY_PROPOSAL: True
+    WITH_AGN_HM: True
+    INFERENCE_TH: 0.00001
+    PRE_NMS_TOPK_TRAIN: 4000
+    POST_NMS_TOPK_TRAIN: 2000 # 2000
+    PRE_NMS_TOPK_TEST: 1000
+    POST_NMS_TOPK_TEST: 256 # 256
+    NMS_TH_TRAIN:  0.9 #0.9
+    NMS_TH_TEST:  0.6 # 0.9
+    POS_WEIGHT: 0.5
+    NEG_WEIGHT: 0.5
+    IGNORE_HIGH_FP: 0.85
+    NUM_CLASSES: 1
+    IN_FEATURES: ["p3", "p4", "p5"]
+    FPN_STRIDES: [8, 16, 32]
+DATASETS:
+  TRAIN: ("coco_2017_train_stone",)
+  TEST: ("coco_2017_val_stone",)
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.001
+  STEPS:  (10000,12000) #(2000,3000)
+  MAX_ITER:  12000  # 3100
+  WARMUP_ITERS: 500
+  CHECKPOINT_PERIOD: 100
+  WARMUP_FACTOR: 0.00025
+  CLIP_GRADIENTS:
+    ENABLED: True
+INPUT:
+  FS:
+    FEW_SHOT: False # True #False,fine-tune
+    SUPPORT_WAY: 1
+    SUPPORT_SHOT: 9
+  MIN_SIZE_TRAIN:  (200, 240, 280, 320, 360, 400, 440) #(400, ) #(220, 220) #(240, 272, 304, 336, 368, 400) #(440, 472, 504, 536, 568, 600)
+  MAX_SIZE_TRAIN: 1000
+  MIN_SIZE_TEST: 320 # 400 # 620 # 370 # 460 430 400
+  MAX_SIZE_TEST: 1000 
+OUTPUT_DIR: './output/fsod/finetune_dir/r50_lightcenternet_sm+rg'
+
+# from demo_visualizer import Have_a_Look
+# Have_a_Look(correlation,4)
