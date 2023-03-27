@@ -12,8 +12,7 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <th rowspan="2">Method</th>
         <th colspan="2">5-shot</th>
         <th colspan="2">15-shot</th>
-        <th colspan="2">25-shot</th>
-	     
+        <th colspan="2">25-shot</th>     
     </tr>
     <tr align="center">
         <td>AP</td>
@@ -40,8 +39,7 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <td>62.5</td>
         <th>54.1</th>
         <th>64.7</th>    
-    </tr>
-	
+    </tr>	
 </table>
 
 
