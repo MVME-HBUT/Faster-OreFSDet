@@ -13,8 +13,8 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <th colspan="2">5-shot</th>
         <th colspan="2">15-shot</th>
         <th colspan="2">25-shot</th>
-	     <th colspan="2">Size</th>
-	    <th colspan="2">FPS</th>
+	     <th rowspan="2">Size</th>
+	    <th rowspan="2">FPS</th>
     </tr>
     <tr align="center">
         <td>AP</td>
