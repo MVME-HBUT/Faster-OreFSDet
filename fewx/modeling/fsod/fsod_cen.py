@@ -66,9 +66,9 @@ class CenterNet2Detector(nn.Module):
         self.agp1=nn.AdaptiveAvgPool2d((32,32))
         self.agp2=nn.AdaptiveAvgPool2d((16,16))
         self.agp3=nn.AdaptiveAvgPool2d((8,8))
-        self.vip_p3=WeightedPermuteMLP(128,32)
-        self.vip_p4=WeightedPermuteMLP(128,16)
-        self.vip_p5=WeightedPermuteMLP(128,8)
+        self.vip_p3=SM_Block(128,32)
+        self.vip_p4=SM_Block(128,16)
+        self.vip_p5=SM_Block(128,8)
         self.support_pool_1x1=nn.AdaptiveAvgPool2d((1,1))
         # self.support_pool_3x1=nn.AdaptiveAvgPool2d((1,1))
         self.support_pool_1x3=nn.AdaptiveAvgPool2d((1,3))
@@ -371,61 +371,15 @@ class CenterNet2Detector(nn.Module):
                 support_features_p3 = self.vip_p3(support_features_p3).permute(0,3,2,1) #[9,16,16,160]
                 support_features_p4 = self.vip_p4(support_features_p4).permute(0,3,2,1)
                 support_features_p5 = self.vip_p5(support_features_p5).permute(0,3,2,1)
-                
-                print(support_features_p3.shape)
-                
-                ##########################
-                ####################cot
-                # support_features_p3 = self.agp1(support_features_p3)
-                # support_features_p4 = self.agp2(support_features_p4)
-                # support_features_p5 = self.agp3(support_features_p5)
-                # support_features_p3 = self.cot_p3(support_features_p3)
-                # support_features_p4 = self.cot_p3(support_features_p4)
-                # support_features_p5 = self.cot_p3(support_features_p5)
-
-
-                ###############Polarize
-                # support_features_p3 = self.agp1(support_features_p3)
-                # support_features_p4 = self.agp2(support_features_p4)
-                # support_features_p5 = self.agp3(support_features_p5)
-                # # support_features_p3 = self.Polarize_p3(support_features_p3)
-                # # support_features_p4 = self.Polarize_p4(support_features_p4)
-                # # support_features_p5 = self.Polarize_p5(support_features_p5)
-                # support_features_p3 = self.cbam_p3(support_features_p3)
-                # support_features_p4 = self.cbam_p4(support_features_p4)
-                # support_features_p5 = self.cbam_p5(support_features_p5)
-                
+               
                 support_features_p3_pool = support_features_p3.mean(0, True)
                 support_features_p4_pool = support_features_p4.mean(0, True)
                 support_features_p5_pool = support_features_p5.mean(0, True)
                 
 
-                # print(support_features_pool_rcnn_8.shape)
-                # support_features_pool_rcnn_8_visial= self.vip_p5(support_features_pool_rcnn_8.permute(0,2,3,1)).permute(0,3,2,1)
-                # support_features_p3_pool_visial=support_features_p3_pool
-                
                 # Have_a_Look(support_features_p4_pool,4)
                 
                 # print(support_features_pool_rcnn.shape)
-                
-                
-                
-                
-                
-                
-                # support_features_p3_pool = support_features_p3_pool.mean(dim=[2,3],keepdim=True)
-                # support_features_p4_pool = support_features_p4_pool.mean(dim=[2,3],keepdim=True)
-                # support_features_p5_pool = support_features_p5_pool.mean(dim=[2,3],keepdim=True)
-                
-                
-                # support_features_p3 = support_features_p3.mean(0, True).mean(dim=[2,3],keepdim=True)
-                # # support_features_p3 = self.agp(support_features_p3)
-                # support_features_p4 = support_features_p4.mean(0, True).mean(dim=[2,3],keepdim=True)
-                # # support_features_p3 = self.agp(support_features_p4)
-                # support_features_p5 = support_features_p5.mean(0, True).mean(dim=[2,3],keepdim=True)
-                # # support_features_p3 = self.agp(support_features_p5)
-                # #support_features_p6 = support_features_p6.mean(0, True).mean(dim=[2,3],keepdim=True)
-                # #support_features_p7 = support_features_p7.mean(0, True).mean(dim=[2,3],keepdim=True)
                 # support_features_pool_rcnn = support_features_p3_pool + support_features_p4_pool +support_features_p5_pool #for rcnn 
                 support_dict['p3'][cls] = support_features_p3_pool.detach().cpu().data
                 support_dict['p4'][cls] = support_features_p4_pool.detach().cpu().data
@@ -512,8 +466,6 @@ class CenterNet2Detector(nn.Module):
             pos_correlation_p3_2_1 = F.relu(F.conv2d(query_feature_p3, support_pool__p3_1x3.permute(1,0,2,3),padding=(0, 1), groups=128))
             pos_correlation_p3_2_2 = F.relu(F.conv2d(pos_correlation_p3_2_1, support_pool_p3_3x1.permute(1,0,2,3),padding=(1, 0), groups=128))
             
-            # pos_correlation_p3_3_1 = F.conv2d(query_feature_p3, support_pool_p3_1x7.permute(1,0,2,3),padding=(0, 3), groups=128)
-            # pos_correlation_p3_3_2 = F.conv2d(pos_correlation_p3_3_1, support_pool_p3_7x1.permute(1,0,2,3),padding=(3, 0), groups=128)
             attn1 = pos_correlation__p3_1_2 + pos_correlation_p3_2_2 +query_feature_p3
             attn1 = F.relu(self.conv3(torch.cat((attn1,query_feature_p3),1)))#+torch.cat((self.conv1(attn1),self.conv2(query_feature_p3)),1)
             # attn1 = torch.cat((attn1,query_feature_p3),1)
@@ -533,8 +485,7 @@ class CenterNet2Detector(nn.Module):
             pos_correlation_p4_2_1 = F.relu(F.conv2d(query_feature_p4, support_pool_p4_1x3.permute(1,0,2,3),padding=(0, 1), groups=128))
             pos_correlation_p4_2_2 = F.relu(F.conv2d(pos_correlation_p4_2_1, support_pool_p4_3x1.permute(1,0,2,3),padding=(1, 0), groups=128))
             
-            # pos_correlation_p4_3_1 = F.conv2d(query_feature_p4, support_pool_p4_1x7.permute(1,0,2,3),padding=(0, 3), groups=128)
-            # pos_correlation_p4_3_2 = F.conv2d(pos_correlation_p4_3_1, support_pool_p4_7x1.permute(1,0,2,3),padding=(3, 0), groups=128)
+
             attn2 = pos_correlation_p4_1_2 + pos_correlation_p4_2_2  +query_feature_p4
             # attn2 = torch.cat((attn2,query_feature_p4),1)
             attn2 = F.relu(self.conv3(torch.cat((attn2,query_feature_p4),1)))#+torch.cat((self.conv1(attn2),self.conv2(query_feature_p4)),1)
@@ -547,9 +498,6 @@ class CenterNet2Detector(nn.Module):
             support_pool_p5_1x1 = self.support_pool_1x1(support_features_p5_pool)
             support_pool_p5_1x3 = self.support_pool_1x3(support_features_p5_pool)
             support_pool_p5_3x1 = self.support_pool_3x1(support_features_p5_pool)
-            # support_pool_p5_5x1 = self.support_pool_5x1(support_features_p5_pool)
-            # support_pool_p5_1x7 = self.support_pool_1x7(support_features_p5_pool)
-            # support_pool_p5_7x1 = self.support_pool_7x1(support_features_p5_pool)
             
             pos_correlation_p5_1_1 = F.relu(F.conv2d(query_feature_p5, support_pool_p5_1x1.permute(1,0,2,3),padding=(0, 0), groups=128)) # attention map
             pos_correlation_p5_1_2 = F.relu(F.conv2d(pos_correlation_p5_1_1, support_pool_p5_1x1.permute(1,0,2,3),padding=(0, 0), groups=128))
@@ -557,8 +505,6 @@ class CenterNet2Detector(nn.Module):
             pos_correlation_p5_2_1 = F.relu(F.conv2d(query_feature_p5, support_pool_p5_1x3.permute(1,0,2,3),padding=(0, 1), groups=128))
             pos_correlation_p5_2_2 = F.relu(F.conv2d(pos_correlation_p5_2_1, support_pool_p5_3x1.permute(1,0,2,3),padding=(1, 0), groups=128))
             
-            # pos_correlation_p5_3_1 = F.conv2d(query_feature_p5, support_pool_p5_1x7.permute(1,0,2,3),padding=(0, 3), groups=128)
-            # pos_correlation_p5_3_2 = F.conv2d(pos_correlation_p5_3_1, support_pool_p5_7x1.permute(1,0,2,3),padding=(3, 0), groups=128)
             attn3 = pos_correlation_p5_1_2 + pos_correlation_p5_2_2  + query_feature_p5
             attn3 = F.relu(self.conv3(torch.cat((attn3,query_feature_p5),1)))#+torch.cat((self.conv1(attn3),self.conv2(query_feature_p5)),1)
             # Have_a_Look(query_feature_p4,4)
@@ -567,28 +513,16 @@ class CenterNet2Detector(nn.Module):
         support_features_rcnn_8 = self.support_dict['rcnn_8'][cls_id]
         support_features_rcnn_4 = self.support_dict['rcnn_4'][cls_id]
         support_features_pooler_rcnn = [support_features_rcnn_8,support_features_rcnn_4] 
-        # for cls_id, support_features_p6 in self.support_dict['p6'].items():      
-        #     support_features_p6 = self.support_dict['p6'][cls_id]
-        #     pos_correlation_4 = F.conv2d(query_feature_p6, support_features_p6.permute(1,0,2,3), groups=256)
-        
-        # for cls_id, support_features_p7 in self.support_dict['p7'].items(): 
-        #     support_features_p7 = self.support_dict['p7'][cls_id]
-        #     pos_correlation_5 = F.conv2d(query_feature_p7, support_features_p7.permute(1,0,2,3), groups=256)
+
         pos_features = {'p3': attn1,'p4': attn2,'p5': attn3} # attention map for attention rpn
-        
-        # pos_features = {'p3': pos_correlation_1,'p4': pos_correlation_2,'p5': pos_correlation_3,'p6': pos_correlation_4,'p7': pos_correlation_5} # attention map for attention rpn
-        # que_features = {'p3': query_feature_p3,'p4': query_feature_p4,'p5': query_feature_p5,'p6': query_feature_p6,'p7': query_feature_p7} # attention map for attention rpn
         
         del attn1
         del attn2
         del attn3
-        # del pos_correlation_4
-        # del pos_correlation_5
         del query_feature_p3
         del query_feature_p4
         del query_feature_p5
-        # del query_feature_p6
-        # del query_feature_p7
+
         
         proposals, _ = self.proposal_generator(query_images, pos_features, None)
         
@@ -647,7 +581,7 @@ class MLP(nn.Module):
     def forward(self, x) :
         return self.drop(self.fc2(self.drop(self.act(self.fc1(x)))))
 
-class WeightedPermuteMLP(nn.Module):
+class SM_Block(nn.Module):
     def __init__(self,dim,seg_dim=8, qkv_bias=False, proj_drop=0.):
         super().__init__()
         self.seg_dim=seg_dim
