@@ -73,7 +73,7 @@ Run `sh all.sh` in the root dir.
 change all.sh
 ```
 rm support_dir/support_feature.pkl
-CUDA_VISIBLE_DEVICES=0 python3 fsod_train_net.py --num-gpus 1 \
+CUDA_VISIBLE_DEVICES=XX python3 fsod_train_net.py --num-gpus XX \
 	--config-file configs/fsod/finetune_R_50_C4_1x.yaml 2>&1 | tee log/fsod_finetune_stone_R50_train_log_5shot.txt
 ```
 Then, run the following
@@ -83,7 +83,7 @@ sh all.sh
 ### Evaluation
 change the all.sh
 ```
-CUDA_VISIBLE_DEVICES=0 python3 fsod_train_net.py --num-gpus 1 \
+CUDA_VISIBLE_DEVICES=XX python3 fsod_train_net.py --num-gpus XX \
 	--config-file configs/fsod/finetune_R_50_C4_1x.yaml \
 	--eval-only MODEL.WEIGHTS ./output/fsod/finetune_dir/R_50_C4_1x_stone_5shot/model_final.pth 2>&1 | tee log/fsod_finetune_stone_R50_test_log_5shot.txt
 ```
