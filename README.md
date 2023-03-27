@@ -84,7 +84,7 @@ sh all.sh
 change the all.sh
 ```
 CUDA_VISIBLE_DEVICES=XX python3 fsod_train_net.py --num-gpus XX \
-	--config-file configs/fsod/finetune_R_50_C4_1x.yaml \
+	--config-file configs/fsod/finetune_vovnet.yaml.yaml \
 	--eval-only MODEL.WEIGHTS ./output/fsod/finetune_dir/vovnet_25shot/model_final.pth 2>&1 | tee log/fsod_finetune_stone_vovnet_25_test_log.txt
 ```
 just run the following
