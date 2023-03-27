@@ -74,7 +74,7 @@ change all.sh
 ```
 rm support_dir/support_feature.pkl
 CUDA_VISIBLE_DEVICES=XX python3 fsod_train_net.py --num-gpus XX \
-	--config-file configs/fsod/finetune_R_50_C4_1x.yaml 2>&1 | tee log/fsod_finetune_stone_R50_train_log_5shot.txt
+	--config-file configs/fsod/finetune_vovnet.yaml 2>&1 | tee log/fsod_finetune_vovnet_cen_train_25shot.txt
 ```
 Then, run the following
 ```
@@ -85,7 +85,7 @@ change the all.sh
 ```
 CUDA_VISIBLE_DEVICES=XX python3 fsod_train_net.py --num-gpus XX \
 	--config-file configs/fsod/finetune_R_50_C4_1x.yaml \
-	--eval-only MODEL.WEIGHTS ./output/fsod/finetune_dir/R_50_C4_1x_stone_5shot/model_final.pth 2>&1 | tee log/fsod_finetune_stone_R50_test_log_5shot.txt
+	--eval-only MODEL.WEIGHTS ./output/fsod/finetune_dir/vovnet_25shot/model_final.pth 2>&1 | tee log/fsod_finetune_stone_vovnet_25_test_log.txt
 ```
 just run the following
 ```
