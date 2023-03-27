@@ -13,6 +13,7 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <th colspan="2">5-shot</th>
         <th colspan="2">15-shot</th>
         <th colspan="2">25-shot</th>
+	     <th colspan="2">25-shot</th>
     </tr>
     <tr align="center">
         <td>AP</td>
@@ -21,6 +22,7 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <td>AP75</td>
         <td>AP</td>
         <td>AP75</td>
+	     <td>AP75</td>
     </tr>
     <tr align="center">
         <td>Attentionrpn(baseline)</td>
@@ -30,6 +32,7 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <td>34.5</td>
         <td>30.8</td>
         <td>37.0</td>
+	     <td>37.0</td>
     </tr>
     <tr align="center">
         <td>Faster-OreFSDet</td>
@@ -39,16 +42,9 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <td>62.5</td>
         <th>54.1</th>
         <th>64.7</th>
+	    <th>64.7</th>
     </tr>
-	 <tr align="center">
-        <td>Faster-OreFSDet</td>
-        <td>48.5</td>
-        <td>57.6</td>
-        <td>52.1</td>
-        <td>62.5</td>
-        <th>54.1</th>
-        <th>64.7</th>
-    </tr>
+	
 </table>
 
 
