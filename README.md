@@ -23,7 +23,7 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <td>AP75</td>
         <td>AP</td>
         <td>AP75</td>
-	    <td>AP75</td>
+	   
 	    
 	    
 	     
