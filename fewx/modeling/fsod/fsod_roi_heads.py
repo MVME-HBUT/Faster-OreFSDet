@@ -48,13 +48,7 @@ def build_roi_heads(cfg, input_shape):
     """
     name = cfg.MODEL.ROI_HEADS.NAME
     return ROI_HEADS_REGISTRY.get(name)(cfg, input_shape)
-'''
-在predictor中的信息流是,res4的feature和proposal一起输入ROIPool,得到每个box的feature,
-然后经过res5得到每一个box的feature,这里有一点需要注意,在代码中这个feature
-经过box_features.mean(dim=[2, 3])使得原来7*7的feature变成了1维的向量,
-例如(987,2048,7,7)的feature变成了(987,2048)给到box_predictor中的两个线性层,一个输出类别的分数，
-另一个输出box的delta,然后将最终的结果经过NMS输出出来。
-'''
+
 
 @ROI_HEADS_REGISTRY.register()
 class FsodRes5ROIHeads(ROIHeads):
@@ -66,7 +60,6 @@ class FsodRes5ROIHeads(ROIHeads):
     
     def __init__(self, cfg, input_shape):
         super().__init__(cfg)
-        #参数res5通过cls._build_res5_block(cfg)构建res5层，用来作为ROI的输入层。
         # fmt: off
         self.in_features  = cfg.MODEL.ROI_HEADS.IN_FEATURES
         pooler_resolution = cfg.MODEL.ROI_BOX_HEAD.POOLER_RESOLUTION
@@ -77,16 +70,13 @@ class FsodRes5ROIHeads(ROIHeads):
         # fmt: on
         assert not cfg.MODEL.KEYPOINT_ON
         assert len(self.in_features) == 1
-        # 参数ROIPooler是完成ROIpooling操作的类，它继承自torchvision的ops。
         self.pooler = ROIPooler(
             output_size=pooler_resolution,
             scales=pooler_scales,
             sampling_ratio=sampling_ratio,
             pooler_type=pooler_type,
         )
-        #参数res5通过cls._build_res5_block(cfg)构建res5层，用来作为ROI的输入层。
         self.res5, out_channels = self._build_res5_block(cfg)
-        #参数box_predictor的输入是FastRCNNOutputLayers，其作用是输出分类score和box回归delta。
         self.box_predictor = FsodFastRCNNOutputLayers(
             cfg, ShapeSpec(channels=out_channels, height=1, width=1)
         )
@@ -323,12 +313,6 @@ class CustomCascadeROIHeads(CascadeROIHeads):
         return x
     
     
-    # def roi_pooling(self, features, boxes):
-    #     box_features = self.box_pooler(
-    #         [features[f] for f in self.in_features], boxes
-    #     )
-    #     return box_features #feature_pooled
-    
     def _forward_box(self, features, proposals, targets=None):
         """
         Add mult proposal scores at testing
@@ -499,7 +483,7 @@ class CustomCascadeROIHeads(CascadeROIHeads):
         support_box_features_4 = support_box_features[1].mean(0,True)
         
         if self.attention_rpn:
-            #glabal
+            #global
             x_query_fc = self.avgpool_fc(box_features).squeeze(3).squeeze(2) #[128, 128, 7, 7]
             
             support_fc = self.avgpool_fc(support_box_features_).squeeze(3).squeeze(2).expand_as(x_query_fc)
@@ -520,55 +504,17 @@ class CustomCascadeROIHeads(CascadeROIHeads):
             x = F.relu(self.conv_3(x), inplace=True) # 3x3
             x = self.avgpool(x) # 1x1
             patch_relation = x.squeeze(3).squeeze(2)
-        
+        #DSA 
         if self.head_cnn:
-            
-            
-            
             support_box_features_ = support_box_features_.expand_as(box_features)
             attn_8 = self.conv3(torch.cat((box_features,support_box_features_),1))+torch.cat((self.conv1(box_features),self.conv2(support_box_features_)),1) 
             attn_8 =self.box_head[stage](attn_8)
-            # box_features =self.box_head[stage](box_features_8)
-            #4x4
             
             support_box_features_4 = support_box_features_4.expand_as(box_features_4)
-            
             attn_4 = self.conv3(torch.cat((box_features_4,support_box_features_4),1))+torch.cat((self.conv1(box_features_4),self.conv2(support_box_features_4)),1) 
-            
             attn_4 =F.relu(self.fc2(attn_4.flatten(1)))
-
-            # print(attn_4.shape)
-            # print(attn_8.shape)
             cls_attn = F.relu(self.fc3(torch.cat((attn_4,attn_8),1)))
             
-            # box_features = self.box_head[stage](box_features)
         else:
-            box_features = self.box_head[stage](box_features)
-        
-        # if self.attentionrpn:
-        #     #global
-            
-        #     x_query_fc = self.avgpool_fc(box_features) #[1, 2048, 7, 7]
-        #     support_fc = self.avgpool_fc(support_box_features).expand_as(x_query_fc)
-        #     cat_fc = torch.cat((x_query_fc, support_fc), 1)
-        #     cat_fc =self.conv3(cat_fc)
-            
-        #     global_relation = self.box_head[stage](cat_fc)
-        #     #local
-        #     x_query_cor = self.conv_cor(box_features)
-        #     support_cor = self.conv_cor(support_box_features)
-        #     local_relation = F.relu(F.conv2d(x_query_cor, support_cor.permute(1,0,2,3), groups=128), inplace=True).squeeze(3).squeeze(2)
-            
-        #     #patch
-        #     support_box_features = support_box_features.expand_as(box_features)
-        #     x = torch.cat((box_features, support_box_features), 1)
-        #     x = F.relu(self.conv_1(x), inplace=True) # 5x5
-        #     x = self.avgpool(x)
-        #     x = F.relu(self.conv_2(x), inplace=True) # 3x3
-        #     x = F.relu(self.conv_3(x), inplace=True) # 3x3
-        #     x = self.avgpool(x) # 1x1
-        #     patch_relation = x.mean(dim=[2, 3], keepdim=True).squeeze(3).squeeze(2)
-            
-        
-        
+            box_features = self.box_head[stage](box_features)     
         return self.box_predictor[stage](attn_8)
