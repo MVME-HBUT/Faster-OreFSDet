@@ -32,13 +32,13 @@ Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object 
         <td>37.0</td>
     </tr>
     <tr align="center">
-        <td>orefsdet</td>
-        <td>36.2</td>
-        <td>33.0</td>
-        <td>39.3</td>
-        <td>45.6</td>
-        <th>44.7</th>
-        <th>48.4</th>
+        <td>Faster-OreFSDet</td>
+        <td>48.5</td>
+        <td>57.6</td>
+        <td>52.1</td>
+        <td>62.5</td>
+        <th>54.1</th>
+        <th>64.7</th>
     </tr>
 </table>
 
