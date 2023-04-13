@@ -212,7 +212,7 @@ class CenterNet2Detector(nn.Module):
             support_features_p5 = support_features['p5']
             
             
-            ################vip
+            ################sm block
             support_features_p3 = self.agp1(support_features_p3).permute(0,2,3,1)
             support_features_p4 = self.agp2(support_features_p4).permute(0,2,3,1)
             support_features_p5 = self.agp3(support_features_p5).permute(0,2,3,1)
