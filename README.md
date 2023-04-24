@@ -2,8 +2,6 @@
 
 Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object Detector for Ore Images"
 
-# Faster-OreFSDet
-
 **Faster-OreFSDet** is based on [**FewX**](https://github.com/fanq15/FewX) ( an open source toolbox on top of Detectron2 for data-limited instance-level recognition tasks, e.g.) 
 
 ## Faster-OreFsdet and baseline on ore dataset
