@@ -100,5 +100,18 @@ python demo.py  \
 
 This repo is developed based on [FewX](https://github.com/fanq15/FewX) and [detectron2](https://github.com/facebookresearch/detectron2/blob/master/INSTALL.md). Thanks for their wonderful codebases.
 
+## **Cite**
+
+```
+@ARTICLE{Faster_OreFSDet,  
+author={Yang Zhang, Le Cheng, Yuting Peng, Chengming Xu, Yanwei Fu, Bo Wu, Guodong Sun},  
+journal={Pattern Recognition},   
+title={{Faster OreFSDet: A Lightweight and Effective Few-shot Object Detector for Ore Images}},   
+year={2023},  
+volume={ },  
+number={},  
+pages={ },  
+doi={}
+```
 
 
