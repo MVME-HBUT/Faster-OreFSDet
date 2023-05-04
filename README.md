@@ -1,5 +1,5 @@
 # Faster-OreFSDet
-![Image text](https://github.com/MVME-HBUT/Faster-OreFSDet/blob/main/question.png)
+
 ![Image text](https://github.com/MVME-HBUT/Faster-OreFSDet/blob/main/over_framework.png)
 Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object Detector for Ore Images"
 
