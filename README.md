@@ -1,7 +1,7 @@
 # Faster-OreFSDet
 
 ![Image text](https://github.com/MVME-HBUT/Faster-OreFSDet/blob/main/over_framework.png)
-Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object Detector for Ore Images", which has been accepted by ([**PR**](https://arxiv.org/pdf/2305.01183.pdf))
+Offical codes for "Faster OreFSDet: A Lightweight and Effective Few-shot Object Detector for Ore Images", which has been accepted by [**PR**](https://arxiv.org/pdf/2305.01183.pdf).
 
 **Faster-OreFSDet** is based on [**FewX**](https://github.com/fanq15/FewX) ( an open source toolbox on top of Detectron2 for data-limited instance-level recognition tasks, e.g.) The basic detector is [**CenterNet2**](https://github.com/xingyizhou/CenterNet2).
 
