@@ -109,10 +109,10 @@ author={Yang Zhang, Le Cheng, Yuting Peng, Chengming Xu, Yanwei Fu, Bo Wu, Guodo
 journal={Pattern Recognition},   
 title={{Faster OreFSDet: A Lightweight and Effective Few-shot Object Detector for Ore Images}},   
 year={2023},  
-volume={ },  
-number={},  
-pages={ },  
-doi={}
+volume={141},  
+number={9},  
+pages={109664},  
+doi={10.1016/j.patcog.2023.109664}
 ```
 
 
